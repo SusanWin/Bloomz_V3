@@ -184,43 +184,52 @@
     <button onclick="closePopup()">OK</button>
   </div>
 </div>
-
 <script>
-  // 🔥 Replace with your Firebase config
+  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyAkZ5ItGHMfKLGqxwU3o8F8rhuiEkvcqy0",
-  authDomain: "bloomz-2c9c0.firebaseapp.com",
-  projectId: "bloomz-2c9c0",
-  storageBucket: "bloomz-2c9c0.firebasestorage.app",
-  messagingSenderId: "552809403424",
-  appId: "1:552809403424:web:1cec0421d55df2e37c5845",
-  measurementId: "G-GY8LD9L028"
+    authDomain: "bloomz-2c9c0.firebaseapp.com",
+    projectId: "bloomz-2c9c0",
+    storageBucket: "bloomz-2c9c0.firebasestorage.app",
+    messagingSenderId: "552809403424",
+    appId: "1:552809403424:web:1cec0421d55df2e37c5845"
   };
 
+  // Initialize Firebase ONCE
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  document.getElementById("appointmentForm").addEventListener("submit", function(e) {
+  console.log("Firebase Ready ✅");
+
+  // Submit Handler
+  document.getElementById("appointmentForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
-    db.collection("appointments").add({
-      name: name.value,
-      age: age.value,
-      gender: gender.value,
-      phone: phone.value,
-      email: email.value,
-      date: date.value,
-      time: time.value,
-      concern: concern.value,
-      message: message.value,
+    const data = {
+      name: document.getElementById("name").value,
+      age: document.getElementById("age").value,
+      gender: document.getElementById("gender").value,
+      phone: document.getElementById("phone").value,
+      email: document.getElementById("email").value,
+      date: document.getElementById("date").value,
+      time: document.getElementById("time").value,
+      concern: document.getElementById("concern").value,
+      message: document.getElementById("message").value,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-      document.getElementById("popup").style.display = "flex";
-      document.getElementById("appointmentForm").reset();
-    }).catch(error => {
-      alert("Error saving data");
-      console.error(error);
-    });
+    };
+
+    console.log("Saving 👉", data);
+
+    db.collection("appointments")
+      .add(data)
+      .then(() => {
+        document.getElementById("popup").style.display = "flex";
+        document.getElementById("appointmentForm").reset();
+      })
+      .catch((err) => {
+        console.error("Save Failed ❌", err);
+        alert(err.message);
+      });
   });
 
   function closePopup() {
@@ -228,7 +237,7 @@
   }
 </script>
 
+
 </body>
 </html>
-
 
